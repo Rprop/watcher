@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbox>
+    <tool>
+        <key>date</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.DateTool</class>
+        <parameter name="format" value="yyyy-M-d"/>
+    </tool>
+    <tool>
+        <key>math</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.MathTool</class>
+    </tool>
+    <tool>
+        <key>webHelper</key>
+        <scope>application</scope>
+        <class>com.jd.jmi.escort.util.WebHelper</class>
+    </tool>
+    <tool>
+        <key>orderTypeUtil</key>
+        <scope>request</scope>
+        <class>com.jd.jmi.escort.util.OrderTypeUtil</class>
+    </tool>
+    <tool>
+        <key>syncTimeIntervalUtil</key>
+        <scope>request</scope>
+        <class>com.jd.jmi.escort.util.SyncTimeIntervalUtil</class>
+    </tool>
+    <tool>
+        <key>blackUserLevelUtil</key>
+        <scope>request</scope>
+        <class>com.jd.jmi.escort.util.BlackUserLevelUtil</class>
+    </tool>
+    <tool>
+        <key>jmiEnumUtils</key>
+        <scope>request</scope>
+        <class>com.jd.jmi.escort.util.JmiEnumUtils</class>
+    </tool>
+</toolbox>

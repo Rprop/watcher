@@ -1,0 +1,17 @@
+<div id="takeOffTimeTem">
+    <div class="form-inline" id="{id}_data">
+        <input name="conditionName" type="hidden" value="{cName}"/>
+        <div class="form-group">
+            <label class="control-label">{name}</label>
+        </div>
+        <div class="form-group" style="width: 160px;">
+            <div>
+                <input name="operator" type="hidden" id="{id}_operator" value="=="/>
+                <select name="expectValue" id="{id}_expectValue" class="form-control" style="display: none;">
+                    #getTakeOffTimeEnums(-1)
+                </select>
+            </div>
+        </div>
+        <div class="form-group"></div>
+    </div>
+</div>

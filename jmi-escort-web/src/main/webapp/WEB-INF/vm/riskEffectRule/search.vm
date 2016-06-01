@@ -1,0 +1,60 @@
+<div class="panel panel-default">
+    <h3 class="panel-title">搜索</h3>
+    <div class="panel-search borderb0">
+        <form method="post" action="list" id="queryForm">
+            <div class="sch-left">
+                <div class="txt">
+                    <span class="name">风险生效规则名称</span>
+                    <input class="inp" type="text" name="name" id="searchName" value="$!queryData.name"
+                           maxlength="100"/>
+                </div>
+            </div>
+            <div class="sch-right">
+                <div class="txts">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label class="control-label">业务类型</label>
+                        </div>
+                        <div class="form-group" style="width: 160px;">
+                            <div>
+                                <select id="orderType" name="orderType" class="form-control"
+                                        data-rule-isSelectBox="true" data-msg-isSelectBox="请选择业务类型">
+                                    <option value="-1">请选择业务类型</option>
+                                    #getOrderTypes($!queryData.orderType)
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sch-btn pt0">
+                <a href="javascript:subSearch();">搜索</a>
+                <a href="#" style="display: none">到处EXCEL</a>
+            </div>
+        </form>
+        <form method="post" action="list" id="queryHideForm" style="display: none">
+            <input type="text" name="name" value="$!queryData.name"/>
+            <input type="text" name="orderType" value="$!queryData.orderType"/>
+            <input type="text" name="page" value="1" id="pageInput"/>
+        </form>
+    </div>
+</div>
+<script  type="text/javascript">
+    $(function(){
+        makeSelectBoxIt("orderType");
+    });
+    function subSearch(){
+        var name = $("#searchName").val().trim();
+        $('#searchName').val(name);
+        if (name != "" && !checkIsNormal(name)) {
+            showWarnWin("请输入正确的名称");
+            return;
+        }
+        $("#queryForm").submit();
+    }
+    function goToPage(page){
+        $("#pageInput").val(page);
+        $("#queryHideForm").submit();
+    }
+</script>

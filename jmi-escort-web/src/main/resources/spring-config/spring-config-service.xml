@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    <bean id="orderTypeUtil" class="com.jd.jmi.escort.util.OrderTypeUtil">
+        <constructor-arg name="configs" value="${jmi.escort.orderTypes}"></constructor-arg>
+    </bean>
+    <bean id="syncTimeIntervalUtil" class="com.jd.jmi.escort.util.SyncTimeIntervalUtil">
+        <constructor-arg name="configs" value="${jmi.escort.syncTimeIntervals}"></constructor-arg>
+    </bean>
+    <bean id="blackUserLevelUtil" class="com.jd.jmi.escort.util.BlackUserLevelUtil">
+        <constructor-arg name="configs" value="${jmi.escort.blackUserLevels}"></constructor-arg>
+    </bean>
+
+    <bean id="userConfigMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="risk_level_sys_name" value="${risk.level.sys.name}"/>
+                <entry key="risk_level_use_type" value="${risk.level.use.type}"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!--退出登录需要清除的cookie-->
+    <util:list id="logoutCookie">
+        <value>${_sso.server.cookie.name}</value>
+        <value>${_sso.client.cookie.name}</value>
+    </util:list>
+    <!-- 订单类型和RCS EVENT 对应关系-->
+    <util:map id="orderTypetoRcsRiskEvent" key-type="java.lang.Integer" value-type="java.lang.String">
+        <entry key="34" value="PointCard"/><!--游戏点卡-->
+        <entry key="35" value="DomesticAirTickets"/><!--国内机票-->
+        <entry key="36" value="Lottery"/><!--彩票-->
+        <entry key="37" value="TopUpMobile"/><!--手机充值-->
+        <entry key="39" value="Hotel"/><!--酒店-->
+        <entry key="43" value="Movie"/><!--电影票-->
+        <entry key="44" value="Attractions"/><!--景点门票-->
+        <entry key="45" value="CarRent"/><!--租车-->
+        <entry key="46" value="Train"/><!--火车票-->
+        <entry key="47" value="Travel"/><!--度假-->
+        <entry key="53" value="Ticket"/><!--票务-->
+        <entry key="62" value="Game"/><!--页游-->
+        <entry key="74" value="WEC"/><!--水电煤-->
+        <entry key="83" value="InternationalAirTickets"/><!--国际机票-->
+        <entry key="87" value="Data"/><!--流量充值-->
+        <entry key="93" value="Meeting"/><!--会场预定-->
+        <entry key="98" value="Treasure"/><!--一元抢宝-->
+    </util:map>
+
+
+    <bean id="httpClientUtilMng" class="com.jd.jmi.escort.util.impl.HttpClientUtilManagerImpl"/>
+</beans>

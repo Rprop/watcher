@@ -1,0 +1,18 @@
+<!-- 行为时段-->
+<div id="behaviorTem">
+    <div class="form-inline" id="{id}_data">
+        <input name="conditionName" type="hidden" value="{cName}"/>
+        <div class="form-group">
+            <label class="control-label">{name}</label>
+        </div>
+        <div class="form-group" style="width: 160px;">
+            <div>
+                <input name="operator" id="{id}_operator" type="hidden" value="=="/>
+                <select name="expectValue" id="{id}_expectValue" class="form-control" style="display: none;">
+                    #getTimeIntervalEnums(-1)
+                </select>
+            </div>
+        </div>
+        <div class="form-group">（全部为自然时段）</div>
+    </div>
+</div>

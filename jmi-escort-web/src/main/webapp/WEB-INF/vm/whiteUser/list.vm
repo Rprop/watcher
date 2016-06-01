@@ -1,0 +1,223 @@
+#set($pageTitle=['riskUserModel','whiteUser/list','风险白名单管理','风险用户管理'])
+#set($styles=["jQueryValidate","jQueryUI","selectBoxIt","rwd"])
+
+<script src="/xenon/js/jquery/ui.js" type="text/javascript"></script>
+<script src="/xenon/js/time/calander.js" type="text/javascript"></script>
+<script src="/xenon/js/common.js" type="text/javascript"></script>
+<link source="combo" href="/xenon/css/time/cal.css" rel="stylesheet" type="text/css">
+<script src="/xenon/js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+<link source="combo" href="http://misc.360buyimg.com/jdf/1.0.0/ui/calendar/1.0.0/calendar.css" rel="stylesheet"
+      type="text/css">
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <h3 class="panel-title">搜索</h3>
+
+            <div class="panel-search borderb0">
+                <form method="post" action="list" id="queryForm">
+                    <div class="sch-left">
+                        <div class="txt">
+                            <span class="name">创建时间</span>
+                            <input class="inp Wdate" type="text" id="startTimeStr" name="startTimeStr"
+                                   value="$!query.startTimeStr" readonly="true"
+                                   onclick="WdatePicker({isShowClear:false,dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'%y-%M-%d' ,readOnly:true})"/>
+                            <em class="em">-</em>
+                            <input class="inp Wdate" type="text" id="endTimeStr" name="endTimeStr"
+                                   value="$!query.endTimeStr" readonly="true"
+                                   onclick="WdatePicker({isShowClear:false,dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'%y-%M-%d' ,readOnly:true})"/>
+                        </div>
+                    </div>
+                    <div class="sch-mid">
+                        <div class="txt">
+                            <span class="name">用户PIN</span>
+                            <input class="inp" type="text" name="userPin" id="searchUname" value="$!query.userPin"
+                                   maxlength="50"/>
+                        </div>
+                    </div>
+                    <div class="sch-right">
+                        <div class="txts">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <label class="control-label">业务类型</label>
+                                </div>
+                                <div class="form-group" style="width: 160px;">
+                                    <div>
+                                        <select id="orderType" name="orderType" class="form-control"
+                                                data-rule-isSelectBox="true" data-msg-isSelectBox="请选择订单类型">
+                                            <option value="-1">请选择业务类型</option>
+                                            #getOrderTypes($!query.orderType)
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sch-btn pt0">
+                        <a href="javascript:sub();">搜索</a>
+                        <a href="#" style="display: none">到处EXCEL</a>
+                    </div>
+                </form>
+                <form method="post" action="list" id="queryHideForm" style="display: none">
+                    <input class="inp" type="text" name="startTimeStr" value="$!query.startTimeStr"
+                           readonly="true"/>
+                    <input class="inp" type="text" name="endTimeStr" value="$!query.endTimeStr"
+                           readonly="true"/>
+                    <input class="inp" type="text" name="userPin" value="$!query.userPin"/>
+                    <input class="inp" type="text" name="orderType" value="$!query.orderType"/>
+                    <input type="text" name="page" value="1" id="pageInput"/>
+                </form>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a class="btn btn-secondary btn-icon btn-icon-standalone" href="javascript:addUser();">
+                    <i class="fa-plus"></i>
+                    <span>添加风险白名单</span>
+                </a>
+
+                <div class="panel-options">
+                    <a href="#"><i class="linecons-cog"></i></a>
+                    <a href="#" data-toggle="panel"><span class="collapse-icon">&ndash;</span> <span
+                            class="expand-icon">+</span> </a>
+                    <a href="#" data-toggle="reload"> <i class="fa-rotate-right"></i> </a> <a href="#"
+                                                                                              data-toggle="remove">&times;</a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive" data-pattern="priority-columns" data-sticky-table-header="true"
+                     data-add-display-all-btn="true" data-add-focus-btn="true">
+                    <table cellspacing="0" class="table table-small-font table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th data-priority="2" width="50">ID</th>
+                            <th data-priority="1" width="100">用户PIN</th>
+                            <th data-priority="2" width="50">风险用户等级</th>
+                            <th data-priority="2" width="50">业务类型</th>
+                            <th data-priority="2" width="50">创建时间</th>
+                            <th data-priority="1" width="100">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            #if($!datas && $!datas.size()>0)
+                                #foreach($data in $datas)
+                                <tr>
+                                    <th>$!data.id</th>
+                                    <td>$!data.userPin</td>
+                                    <td>白名单用户</td>
+                                    <td>$!orderTypeUtil.getOrderType($!data.orderType)</td>
+                                    <td>$!date.format('yyyy-MM-dd HH:mm:ss', $!data.modified)</td>
+                                    <td>
+                                        <a title="查看用户触发事件" class="btn btn-icon btn-info btn-xs"
+                                           href="javascript:showEvent('$!data.userPin','$!data.orderType');"><i class="fa-adn"></i></a>
+                                        <a title="查看用户风险等级" class="btn btn-icon btn-info btn-xs"
+                                           href="javascript:showInfo('$!data.userPin');"><i class="fa-gear"></i></a>
+                                        <a href="javascript:deleteById('${data.id}')"
+                                           class="btn btn-icon btn-gray btn-xs" title="删除"><i class="fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                                #end
+                            #else
+                            <tr>
+                                <td colspan="7">暂无数据</td>
+                            </tr>
+                            #end
+
+                        </tbody>
+                    </table>
+                </div>
+            ##分页开始
+                #showPageJs("goToPage" $!datas)
+            ##分页结束
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display: none">
+    <form method="post" action="/man/riskEvent/list" id="riskEvent_form" target="_blank">
+        <input type="text" maxlength="50" name="userPin" id="riskEvent_userPin" class="inp">
+        <input type="text" name="orderType" id="riskEvent_orderType">
+        <input id="strEventTimeSta" name="strEventTimeSta"/>
+        <input id="strEventTimeEnd" name="strEventTimeEnd"/>
+    </form>
+</div>
+#parse("/whiteUser/userLevel.vm")
+#parse("/whiteUser/add.vm")
+#set($modals=[{"id":"modal-warn","title":"警告"},{"id":"modal-blackUserLevel","title":"用户风险等级"},{"id":"modal-addUser",
+    "title":"添加风险白名单"}])
+<script type="text/javascript">
+    function getNow() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hour = date.getHours();
+        var minute = date.getMinutes();
+        var second = date.getSeconds();
+        return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+    }
+    function getBeforeDay(before) {
+        var now = new Date();
+        var date = new Date(now.getTime() - before * 24 * 3600 * 1000);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hour = date.getHours();
+        var minute = date.getMinutes();
+        var second = date.getSeconds();
+        return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+    }
+    function goToPage(page) {
+        $("#pageInput").val(page);
+        $("#queryHideForm").submit();
+    }
+    $(function () {
+        makeSelectBoxIt("orderType");
+        $("#strEventTimeSta").val(getBeforeDay(365));
+        $("#strEventTimeEnd").val(getNow());
+    })
+    function sub() {
+        var uname = $("#searchUname").val().trim();
+        $('#searchUname').val(uname);
+        if (uname != "" && !checkIsNormal(uname)) {
+            showWarnWin("请输入正确的用户名");
+            return;
+        }
+        var startTimeStr = $("#startTimeStr").val();
+        var endTimeStr = $("#endTimeStr").val();
+        if (startTimeStr != "" && endTimeStr != "") {
+            var beDate = new Date(startTimeStr.replace(/-/g,"/"));
+            var endDate = new Date(endTimeStr.replace(/-/g,"/"));
+            if (beDate > endDate) {
+                showWarnWin("开始时间不能大于结束时间");
+                return;
+
+            }
+        }
+        $("#queryForm").submit();
+    }
+    function showEvent(uname,orderType) {
+        $("#riskEvent_userPin").val(uname);
+        $("#riskEvent_orderType").val(orderType);
+        $("#riskEvent_form").submit();
+    }
+    /**
+     * 删除
+     * @param id
+     */
+    function deleteById(id) {
+        if (confirm("确定要删除吗?")) {
+            $.post("delete/" + id,
+                    function (data) {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            showWarnWin(data.mes);
+                        }
+                    }
+            );
+        }
+    }
+</script>

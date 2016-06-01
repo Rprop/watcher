@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:important.properties,classpath:extend.properties" />
+    <!--<aop:aspectj-autoproxy expose-proxy="true"/>-->
+    <!--<context:annotation-config/>-->
+
+    <!--处理静态的servlet请求，不进入拦截器-->
+    <mvc:default-servlet-handler default-servlet-name="default"/>
+
+
+    <!-- JSR-303 support will be detected on classpath and enabled automatically -->
+    <mvc:annotation-driven  validator="validator" conversion-service="conversionService">
+        <mvc:message-converters register-defaults="true">
+            <ref bean="fastJsonConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+
+    <!--字符串处理转换-->
+    <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+        <constructor-arg value="UTF-8" />
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+                <value>	application/json;charset=UTF-8</value>
+                <value>	text/html;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    <!-- 全局异常配置 start -->
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">errors/error</prop>
+                <prop key="com.jd.common.hrm.IllegalHrmPrivilegeException">errors/access-denied</prop>
+            </props>
+        </property>
+        <property name="statusCodes">
+            <props>
+                <prop key="errors/error">500</prop>
+                <prop key="errors/404">404</prop>
+                <prop key="errors/405">405</prop>
+            </props>
+        </property>
+        <property name="warnLogCategory" value="WARN"></property>
+        <property name="defaultErrorView" value="errors/error"></property>
+        <property name="defaultStatusCode" value="500"></property>
+    </bean>
+    <!-- 全局异常配置 end -->
+
+    <!--json转换-->
+    <bean id="fastJsonConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>application/json</value>
+            </list>
+        </property>
+        <property name="features">
+            <list>
+                <value>WriteMapNullValue</value>
+                <value>QuoteFieldNames</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--请求转换适配器-->
+    <bean id="requestMappingHandlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="stringHttpMessageConverter"/>
+                <ref bean="fastJsonConverter"/>
+            </list>
+        </property>
+    </bean>
+
+    <!--转换器-->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" >
+        <property name="formatterRegistrars">
+            <bean class="com.jd.common.springmvc.converter.DefaultFormatterRegistrar"/>
+        </property>
+    </bean>
+
+    <!-- template view -->
+    <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <!-- velocity模板路径 -->
+        <property name="resourceLoaderPath" value="/WEB-INF/vm/"/>
+        <!--velocityProperties-->
+        <property name="velocityProperties">
+            <props>
+                <prop key="input.encoding">UTF-8</prop>
+                <!-- 指定模板引擎进行模板处理的编码 -->
+                <prop key="output.encoding">UTF-8</prop>
+                <!-- 指定输出流的编码 -->
+                <prop key="contentType">text/html;charset=UTF-8</prop>
+                <!-- contentType -->
+                <prop key="velocimacro.library">macro.vm</prop>
+                <!-- Velocimacro 模板库的列表 -->
+            </props>
+        </property>
+        <!-- velocity配置文件路径 -->
+        <!--<property name="configLocation" value="classpath:velocity.properties"/>-->
+    </bean>
+
+
+
+    <bean id="velocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
+        <property name="layoutUrl" value="layout/default.vm" />
+        <property name="cache" value="false" />
+        <property name="suffix" value=".vm" />
+        <property name="exposeSpringMacroHelpers" value="true" />
+        <property name="dateToolAttribute" value="dateTool" />
+        <property name="numberToolAttribute" value="numberTool" />
+        <!-- Merge urlBuilderMap to view context for convenience. You can put your tools which must be thread safe. -->
+        <property name="attributesMap" ref="_urlBuilderMap" />
+        <property name="contentType" value="text/html;charset=UTF-8" />
+        <property name="toolboxConfigLocation" value="/WEB-INF/velocityToolbox.xml" /><!--toolbox配置文件路径-->
+    </bean>
+
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="defaultContentType" value="text/xml" />
+        <property name="ignoreAcceptHeader" value="true"/>
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json"/>
+                <entry key="xml" value="application/xml"/>
+            </map>
+        </property>
+    </bean>
+
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+        <property name="viewResolvers">
+            <list>
+                <ref bean="velocityViewResolver"/>
+            </list>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <!-- for application/json -->
+                <bean class="com.alibaba.fastjson.support.spring.FastJsonJsonView"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <!-- locale related -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="cookieName" value="_clientlocale"/>
+        <!--默认地区为中文-->
+        <property name="defaultLocale" value="zh_CN"/>
+        <property name="cookieMaxAge" value="2147483647"/>
+    </bean>
+
+    <!-- file upload related -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="1073741824"/>
+    </bean>
+
+    <!-- Access resource bundles with the specified basename -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <!--<value>classpath:i18n/messages</value>-->
+                <!--<value>classpath:i18n/messages_error</value>-->
+            </list>
+        </property>
+        <!--编码设置-->
+        <property name="defaultEncoding" value="utf-8"/>
+        <!--缓存时间默认s-->
+        <property name="cacheSeconds" value="5"/>
+        <!--找不到则返回key值,不抛出异常-->
+        <property name="useCodeAsDefaultMessage" value="true"/>
+    </bean>
+
+    <import resource="spring-mvc-interceptor.xml"/>
+
+</beans>

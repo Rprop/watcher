@@ -1,0 +1,58 @@
+<div id="blackUserLevelDiv"  style="display:none;">
+    <div class="jmi-user-risk-alert">
+        <ul class="user-risk-list">
+            <li>
+                <span class="name"><em>*</em>用户PIN</span>
+                <span id="userLevelDiv_userPin" class="cont"></span>
+            </li>
+            <li>
+                <span class="name">虚拟风险用户等级</span>
+                <span id="userLevelDiv_riskLevel" class="cont"></span>
+            </li>
+            <li>
+                <span class="name">会员等级</span>
+                <span id="userLevelDiv_memberLevel" class="cont">查询中…</span>
+            </li>
+            <li>
+                <span class="name">京东风险等级</span>
+                <span id="userLevelDiv_jdRiskLevel" class="cont">查询中…</span>
+            </li>
+        </ul>
+        <div class="alert-btn"></div>
+    </div>
+</div>
+<style>
+    .jmi-user-risk-alert .user-risk-list li .name{
+        width: 115px;
+    }
+</style>
+<script  type="text/javascript">
+    function showInfo(userPin,level){
+        $("#userLevelDiv_userPin").html(userPin);
+        $("#userLevelDiv_riskLevel").html("白名单用户");
+        $.ajax({
+            url:'/man/blackUser/getUserInfo',
+            type:'post',
+            data:'userPin='+userPin,
+            error:function(){
+                $("#userLevelDiv_memberLevel").html("未知");
+                $("#userLevelDiv_jdRiskLevel").html("未知");
+            },
+            success:function(data){
+                var ajaxobj = eval("("+data.mes+")");
+                if(ajaxobj.userLevel){
+                    $("#userLevelDiv_memberLevel").html(ajaxobj.userLevel);
+                }else{
+                    $("#userLevelDiv_memberLevel").html("未知");
+                }
+                if(ajaxobj.risk!=undefined){
+                    $("#userLevelDiv_jdRiskLevel").html(ajaxobj.risk);
+                }else{
+                    $("#userLevelDiv_jdRiskLevel").html("未知");
+                }
+                $("#modal-blackUserLevel").modal('show', {backdrop: 'static'});
+                jQuery('#modal-blackUserLevel .modal-body').html($("#blackUserLevelDiv").html());
+            }
+        });
+    }
+</script>

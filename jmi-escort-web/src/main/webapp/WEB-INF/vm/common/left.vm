@@ -1,0 +1,18 @@
+<div class="sidebar-menu toggle-others fixed collapsed">
+    <div class="sidebar-menu-inner ps-container">
+        <section class="sidebar-user-info" >
+            <div class="sidebar-user-info-inner">
+                <a class="user-profile" href="http://man.jmi.jd.com/">
+                    <img width="60" height="60" alt="user-pic" class="img-circle img-corona" src="/xenon/assets/images/user-4.png">
+            			<span>
+            			    <strong>#if($!webHelper.nick)$!webHelper.nick#else$!webHelper.pin #end</strong>
+            			</span>
+                </a>
+            </div>
+        </section>
+        <!-- end ngIf: layoutOptions.sidebar.userProfile -->
+        <ul id="main-menu" class="main-menu">
+            #parse("common/menu.vm")
+        </ul>
+    </div>
+</div>

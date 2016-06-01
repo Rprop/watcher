@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <!--  dataSource 统计监控信息-->
+    <bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <!-- 配置SQL合并-->
+        <property name="mergeSql" value="false"/>
+        <!-- 慢sql的执行时间  单位毫秒-->
+        <property name="slowSqlMillis" value="100"/>
+        <!-- 慢sql记录日志-->
+        <property name="logSlowSql" value="true"/>
+    </bean>
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${escort.jmi.jdbc.url}"/>
+        <property name="username" value="${escort.jmi.jdbc.username}"/>
+        <property name="password" value="${escort.jmi.jdbc.password}"/>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${escort.jmi.jdbc.initialSize}"/>
+        <property name="minIdle" value="${escort.jmi.jdbc.minIdle}"/>
+        <property name="maxActive" value="${escort.jmi.jdbc.maxActive}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="15000"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="180000"/>
+
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="removeAbandoned" value="true" />
+        <!-- 配置监控统计拦截的filters -->
+        <property name="proxyFilters">
+            <list>
+                <ref bean="stat-filter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+    </bean>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="jimClient" class="com.jd.jim.cli.compat.ReloadableJimClientFactoryBean">
+        <property name="configId" value="${redis.cluster.configId}"/>
+        <property name="token" value="${redis.cluster.token}"/>
+    </bean>
+    <!-- 缓存云 封装-->
+    <bean id="jimDBClient" class="com.jd.jmi.cache.JimDBUtils">
+        <property name="jimClient" ref="jimClient"/>
+    </bean>
+</beans>

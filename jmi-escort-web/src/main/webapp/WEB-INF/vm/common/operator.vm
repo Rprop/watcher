@@ -1,0 +1,21 @@
+<div id="operateTem" style="display: none">
+    <div class="form-inline" id="{id}_data">
+        <input name="conditionName" type="hidden" value="{cName}"/>
+        <div class="form-group">
+            <label class="control-label">{name}</label>
+        </div>
+        <div class="form-group" style="width: 160px;">
+            <div>
+                <select name="operator" id="{id}_operator" class="form-control">
+                    #getOftenOperator(-1)
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <input type="text" name="expectValue" id="{id}_expectValue" value="{expectValue}" class="form-control" style="width:161px;" maxlength="{maxlength}"  min="{min}" required="true"/>
+            </div>
+        </div>
+        <div class="form-group">{text}</div>
+    </div>
+</div>

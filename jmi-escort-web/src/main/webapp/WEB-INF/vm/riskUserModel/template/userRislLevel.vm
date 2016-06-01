@@ -1,0 +1,22 @@
+<!-- 风险用户等级-->
+<div id="riskLevelTem">
+    <div class="form-inline" id="{id}_data">
+        <input name="conditionName" type="hidden" value="{cName}"/>
+        <div class="form-group">
+            <label class="control-label">{name}</label>
+        </div>
+        <div class="form-group" style="width: 160px;">
+            <div>
+                <select name="operator" id="{id}_operator" class="form-control">
+                    #getOftenOperator(-1)
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <input type="text" name="expectValue" id="{id}_expectValue" value="0" class="form-control" style="width:161px;" max="10" min="-10">
+            </div>
+        </div>
+        <div class="form-group">（-10~10，数值越大风险越高）</div>
+    </div>
+</div>

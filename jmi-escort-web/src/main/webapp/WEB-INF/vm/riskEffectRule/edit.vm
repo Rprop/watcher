@@ -1,0 +1,240 @@
+#set($pageTitle=['riskEffectRule','riskEffectRule/list','编辑风险生效规则','风险生效规则管理'])
+#set($styles=["jQueryValidate","jQueryUI","selectBoxIt","rwd"])
+<script src="/xenon/js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default panel-jmi">
+            <form id="effectForm" method="post">
+                <div class="panel-body">
+                    <div class="panel-jmi-rule-top">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <input type="hidden" name="id" value="$!{data.id}" id="effectId"/>
+                                <label class="control-label">业务类型</label>
+                            </div>
+                            <div class="form-group" style="width: 160px;">
+                                <div>
+                                    <input type="hidden" name="orderType" value="$!{data.orderType}"/>
+                                    <select  id="orderType" class="form-control" disabled="disabled">
+                                        #getOrderTypes($!{data.orderType})
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-inline" style="margin-top: 18px;">
+                            <div class="form-group">
+                                <label class="control-label">风险规则名称</label>
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <input type="text" name="name" id="name" value="$!{data.name}" class="form-control" style="width:498px;" maxlength="20" required="true"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-inline" style="margin-top: 18px;">
+                            <div class="form-group">
+                                <label class="control-label">规则生效时间</label>
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <input id="startTime" name="startTime" value="$!date.format('yyyy-MM-dd HH:mm:ss', $!data.effectiveDate.getTime())" class="form-control Wdate" type="text" readonly="" required="true"
+                                           onclick="WdatePicker({isShowClear:false,dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'%y-%M-%d' ,readOnly:true})" style="padding: 0;height: 30px;padding-left: 6px;"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                至
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <input id="endTime" name="endTime" value="$!date.format('yyyy-MM-dd HH:mm:ss', $!data.expiredDate.getTime())" class="form-control Wdate" type="text" readonly="" required="true"
+                                           onclick="WdatePicker({isShowClear:false,dateFmt:'yyyy-MM-dd HH:mm:ss' ,readOnly:true})" style="padding: 0;height: 30px;padding-left: 6px;"/>
+                                </div>
+                            </div>
+                            <div class="form-group"></div>
+                        </div>
+                        <div class="form-inline" style="margin-top: 18px;">
+                            <div class="form-group">
+                                <label class="control-label">风险程度指数</label>
+                            </div>
+                            <div class="form-group" style="width: 160px;">
+                                <div>
+                                    <select id="level" name="level" class="form-control">
+                                        <option value="0" #if($data.level == 0) selected="true" #end>0</option>
+                                        <option value="1" #if($data.level == 1) selected="true" #end>1</option>
+                                        <option value="2" #if($data.level == 2) selected="true" #end>2</option>
+                                        <option value="3" #if($data.level == 3) selected="true" #end>3</option>
+                                        <option value="4" #if($data.level == 4) selected="true" #end>4</option>
+                                        <option value="5" #if($data.level == 5) selected="true" #end>5</option>
+                                        <option value="6" #if($data.level == 6) selected="true" #end>6</option>
+                                        <option value="7" #if($data.level == 7) selected="true" #end>7</option>
+                                        <option value="8" #if($data.level == 8) selected="true" #end>8</option>
+                                        <option value="9" #if($data.level == 9) selected="true" #end>9</option>
+                                        <option value="10" #if($data.level == 10) selected="true" #end>10</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <span id="levelTip" style="display: none;color: #ff0000;"></span>
+                            </div>
+                        </div>
+                        <div class="form-inline" style="margin-top: 18px;">
+                            <div class="form-group">
+                                <label class="control-label">风险规则优先级</label>
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <input type="text" name="rulePri" id="rulePri" value="$!{data.rulePri}" class="form-control" style="width:161px;" maxlength="3" max="100" required="true" isDigits="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <span>（优先级为1-100，优先级越高，越早生效）</span>
+                            </div>
+                        </div>
+                        <div class="form-inline" style="margin-top: 18px;">
+                            <div class="form-group">
+                                <label class="control-label">流量覆盖地区</label>
+                                <input name="region" id="region" type="hidden" value="$!{data.region}"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="region_only" id="region_only" value="$!{data.region}" readonly="readonly" class="form-control" style="width:498px; background:#fff; cursor:default;">
+                            </div>
+                            <div class="form-group">
+                                <a href="javascript:showRegion();" class="add-area">选择</a>
+                            </div>
+                        </div>
+                        <div class="form-inline" style="margin-top: 18px;">
+                            <div class="form-group">
+                                <label class="control-label">是否启用灰度</label>
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    #if($!data.releaseType==2)
+                                        <input type="radio" name="releaseType" value="2" checked="true"/>启用&nbsp;&nbsp; <input type="radio" name="releaseType" value="1"/>关闭&nbsp;&nbsp;
+                                    #else
+                                        <input type="radio" name="releaseType" value="2"/>启用&nbsp;&nbsp; <input type="radio" name="releaseType" value="1" checked="true"/>关闭&nbsp;&nbsp;
+                                    #end
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <span>（启用时不对订单产生实际影响，仅记录结果，程度指数自动变成0）</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-jmi-rule-bot">
+                        <div class="left">
+                            <h4>当该用户触发</h4>
+                            <div class="top">
+                                <div class="form-inline" style="margin-top: 18px;">
+                                    <div class="form-group">
+                                        <label class="control-label">风险用户模型</label>
+                                        <input type="hidden" name="userModelIds" id="userModelIds" value="$!{data.userModelIds}"/>
+                                    </div>
+                                    <div class="form-group" style="width: 280px;">
+                                        <div id="firstRiskUserModel">
+                                            <select class="form-control user-model" id="userModelSelectF" data-rule-isSelectBox="true" onchange="translate()">
+                                                <option value="-1">请选择风险用户模型</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group"  id="addUserModelButton"><a class="add-area" href="javascript:addUserModel(false);">增加</a></div>
+                                </div>
+                                <div id="riskUserModelDiv"></div>
+                                <div class="form-inline" style="margin-top: 18px;">
+                                    <div class="form-group">
+                                        <label class="control-label">风险判定模型</label>
+                                    </div>
+                                    <div class="form-group" style="width: 280px;">
+                                        <div id="decideDiv">
+                                            <select id="decideId" name="decideId" class="form-control"  style="overflow: auto" data-rule-isSelectBox="true">
+                                                <option value="-1">请选择风险判定模型</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="bot">
+                                <div class="form-inline" style="margin-top: 18px;">
+                                    <div class="form-group">
+                                        <label class="control-label">生效执行规则</label>
+                                    </div>
+                                    <div class="form-group" style="width: 280px;">
+                                        <div id="executeRuleDiv">
+                                            <select id="executeRule" name="executeRule" class="form-control" data-rule-isSelectBox="true">
+                                                #getJmiActionEnums($!{data.executeRule})
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-inline" style="margin-top: 18px;">
+                                    <div class="form-group">
+                                        <label class="control-label">生效提示语</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <div>
+                                            <input type="text" name="effectTip" id="effectTip" value="$!{data.effectTip}" class="form-control" style="width:280px;" maxlength="30" required="true">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-inline" >
+                                    <div class="form-group">
+                                        <label class="control-label">流程类型</label>
+                                    </div>
+                                    <div class="form-group" style="width: 280px;">
+                                        <div id="processTypeDiv">
+                                            <select id="processType" name="processType" class="form-control" data-rule-isSelectBox="true">
+                                                <option value="-1">--请选择流程类型--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-inline panel-jmi-btn">
+                                    <div class="form-group"><input class="btn btn-block btn-secondary btn-icon" type="submit" id="saveButton" value="保存" id="previewButton"></div>
+                                    <div class="form-group"><input class="btn btn-block btn-secondary btn-icon" type="button" value="重置" onclick="toEdit($!{data.id})"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right" style=""  id="translateDiv">
+                            <p class="textindent24">当用户</p>
+                            <div style="padding-bottom:15px;" id="uTranslateDiv"></div>
+                            <div style="padding-bottom:15px;" id="dTranslateDiv"></div>
+                            <p class="textindent24" id="executeTranslateDiv">则  不能下单</p>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="userTem" style="display: none">
+    <div class="form-inline" style="margin-top: 18px;">
+        <div class="form-group">
+            <label class="control-label"></label>
+        </div>
+        <div class="form-group" style="width: 280px;">
+            <div>
+                <select class="form-control user-model" id="user_select_{id}"  data-rule-isSelectBox="true">
+                    <option value="-1">请选择风险用户模型</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group"><a class="add-area" href="javascript:delDecide({id});">删除</a></div>
+    </div>
+</div>
+#set($modals=[{"id":"modal-warn","title":"警告"},{"id":"modal-region","title":"区域选择"}])
+#parse("riskEffectRule/region.vm")
+#parse("riskEffectRule/riskTemplate.vm")
+<script src="/xenon/js/jquery/ui.js" type="text/javascript"></script>
+<script src="/xenon/js/time/calander.js" type="text/javascript"></script>
+<script src="/xenon/js/common.js" type="text/javascript"></script>
+<script src="/xenon/js/reskEffectRule/reskEffectRule.js" type="text/javascript"></script>
+##<link source="combo" href="/xenon/css/time/cal.css" rel="stylesheet" type="text/css">
+<link source="combo" href="http://misc.360buyimg.com/jdf/1.0.0/ui/calendar/1.0.0/calendar.css" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+    $(function(){
+        init("$!{data.userModelIds}","$!{data.decideId}","$!{data.processType}");
+//        translate();
+    });
+</script>
+

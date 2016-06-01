@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jd.jmi.escort.dao.WhiteUserMapper">
+    <resultMap id="BaseResultMap" type="whiteUser">
+        <id column="id" property="id"/>
+        <result column="userPin" property="userPin"/>
+        <result column="orderType" property="orderType"/>
+        <result column="source" property="source"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+        <result column="modifyUser" property="modifyUser"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, userPin, orderType, source, created, modified, modifyUser
+  </sql>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from white_user
+        where id = #{id}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.Long">
+    delete from white_user
+    where id = #{id}
+  </delete>
+    <insert id="insert" parameterType="whiteUser">
+    insert into white_user (userPin, orderType,
+      source, created, modified, 
+      modifyUser)
+    values ( #{userPin}, #{orderType},
+      #{source},  now(),  now(),
+      #{modifyUser})
+  </insert>
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into white_user ( userPin, orderType, source, created, modified,modifyUser)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.userPin}, #{item.orderType}, #{item.source}, now(), now(), #{item.modifyUser})
+        </foreach>
+    </insert>
+    <update id="updateById" parameterType="whiteUser">
+    update white_user
+    set userPin = #{userPin},
+      orderType = #{orderType},
+      source = #{source},
+      modified =  now(),
+      modifyUser = #{modifyUser}
+    where id = #{id}
+  </update>
+    <select id="queryCount" resultType="int" parameterType="blackUserQuery">
+        select count(1)
+        from white_user
+        <include refid="queryDynamic"/>
+    </select>
+    <select id="queryList" resultMap="BaseResultMap" parameterType="blackUserQuery">
+        select
+        <include refid="Base_Column_List"/>
+        from white_user
+        <include refid="queryDynamic"/>
+        order by modified desc
+        limit #{startRow},#{pageSize}
+    </select>
+    <sql id="queryDynamic">
+        <where>
+            1=1
+            <if test="userPin != null and userPin!=''">
+                and userPin=#{userPin}
+            </if>
+            <if test="orderType != null and orderType>0">
+                and orderType=#{orderType}
+            </if>
+            <if test="startTime != null">
+                and modified>=#{startTime}
+            </if>
+            <if test="endTime != null">
+                <![CDATA[ and modified<=#{endTime}]]>
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByNameOrderType" resultMap="BaseResultMap" parameterType="whiteUser">
+        select
+        <include refid="Base_Column_List"/>
+        from white_user
+        where userPin = #{userPin} and orderType = #{orderType} limit 1
+    </select>
+    <select id="countByNameOrderType" resultType="int" parameterType="java.lang.Long">
+        select count(1)
+        from white_user
+        where userPin = #{userPin} and orderType = #{orderType}
+  </select>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jd.jmi.escort.dao.RiskSnapshotMapper" >
+  <resultMap id="BaseResultMap" type="riskSnapshot" >
+    <id column="id" property="id"   />
+    <result column="ruleId" property="ruleId"  />
+    <result column="type" property="type"  />
+    <result column="description" property="description"  />
+    <result column="created" property="created" />
+    <result column="modefyUser" property="modefyUser"  />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ruleId, type, description, created, modefyUser
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from risk_snapshot
+    where id = #{id}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from risk_snapshot
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="riskSnapshot"  useGeneratedKeys="true" keyProperty="id">
+    insert into risk_snapshot ( ruleId, type,
+      description, created, modefyUser
+      )
+    values ( #{ruleId}, #{type},
+      #{description}, #{created}, #{modefyUser}
+      )
+  </insert>
+  <update id="updateById" parameterType="riskSnapshot" >
+    update risk_snapshot
+    set ruleId = #{ruleId},
+      type = #{type},
+      description = #{description},
+      created = #{created},
+      modefyUser = #{modefyUser}
+    where id = #{id}
+  </update>
+    <update id="updateRuleIdById" parameterType="riskSnapshot" >
+        update risk_snapshot
+        set ruleId = #{ruleId}
+        where id = #{id}
+    </update>
+</mapper>

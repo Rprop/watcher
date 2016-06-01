@@ -1,0 +1,27 @@
+<nav class="navbar horizontal-menu navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="navbar-brand"><a href="#" class="logo">
+            <img src="$!manJmiModule.forPath("/").build()xenon/assets/images/logo-white-bg@2x.png" width="80" alt="" class="hidden-xs"/> <img src="$!manJmiModule.forPath("/").build()xenon/assets/images/logo@2x.png" width="80" alt="" class="visible-xs"/> </a>
+        </div>
+        <div class="nav navbar-mobile">
+            <div class="mobile-menu-toggle">
+                <a href="#" data-toggle="settings-pane" data-animate="true"> <i class="linecons-cog"></i></a>
+                <a href="#" data-toggle="user-info-menu-horizontal"> <i class="fa-bell-o"></i> <span class="badge badge-success">7</span> </a>
+                <a href="#" data-toggle="mobile-menu-horizontal"><i class="fa-bars"></i> </a>
+            </div>
+        </div>
+        <div class="navbar-mobile-clear"></div>
+        <!-- main menu click-to-expand-->
+        <ul class="navbar-nav">
+            #parse("common/menu.vm")
+        </ul>
+        <ul class="nav nav-userinfo navbar-right">
+            <li class="hidden-sm hidden-xs"><a data-toggle="sidebar" href=""><i class="fa-bars"></i></a></li>
+            <li class="dropdown user-profile"><a href="#" data-toggle="dropdown"> <img src="$!manJmiModule.forPath("/").build()xenon/assets/images/user-1.png" alt="user-image" class="img-circle img-inline userpic-32" width="28"/> <span>$!webHelper.pin<i class="fa-angle-down"></i> </span> </a>
+                <ul class="dropdown-menu user-profile-menu list-unstyled">
+                    <li class="last"><a href="$!manJmiModule.forPath("/").build()logout"> <i class="fa-lock"></i>Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

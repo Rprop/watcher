@@ -1,0 +1,78 @@
+/**
+ *
+ * Apply your custom CSS here
+ *
+*/
+
+/**
+分页左侧文本
+**/
+
+.pagination_info{
+    margin: 20px 0;
+}
+
+.pagination_info span{
+    color: #2c2e2f;
+    font-weight: 700;
+}
+
+
+/**
+多级联动选择
+**/
+
+.my-linkage.ms-container{
+    width: 635px;
+}
+
+.my-linkage.ms-container .ms-selection,.my-linkage.ms-container .ms-selectable{
+    background: #fff;
+    color: #555555;
+    float: left;
+    width:185px;
+}
+
+
+.ms-container .ms-list.ms-focus{
+    border-color: rgba(82, 168, 236, 0.8);
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    outline: 0;
+    outline: thin dotted \9;
+}
+
+.my-linkage.ms-container .ms-selection li:hover{
+    cursor: pointer;
+    color: #fff;
+    text-decoration: none;
+    background-color: #68b828;
+}
+
+.cateIcon{
+    width: 40px;
+    height: 200px;
+    float: left;
+    background: transparent url('/xenon/assets/js/multiselect/img/switch.png') no-repeat 50% 50%;
+    background-size: 50%;
+}
+
+
+/**
+sku属性组合
+**/
+
+#J_SKUMapContainer{display:none}
+
+.form-group .required {
+    background: url(http://img04.taobaocdn.com/tps/i4/T1ZUmIXcFkXXXXXXXX-5-6.png) -999em -999em no-repeat;
+}
+
+
+/**
+*重构btn的外边距
+*/
+.btn{
+    margin-bottom: 0;
+}

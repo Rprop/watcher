@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+        <typeAlias alias="riskUserModel" type="com.jd.jmi.escort.pojo.RiskUserModel"/>
+        <typeAlias alias="riskDecideModel" type="com.jd.jmi.escort.pojo.RiskDecideModel"/>
+        <typeAlias alias="riskEffectRule" type="com.jd.jmi.escort.pojo.RiskEffectRule"/>
+        <typeAlias alias="blackUser" type="com.jd.jmi.escort.pojo.BlackUser"/>
+        <typeAlias alias="whiteUser" type="com.jd.jmi.escort.pojo.WhiteUser"/>
+        <typeAlias alias="blackSyncRule" type="com.jd.jmi.escort.pojo.BlackSyncRule"/>
+        <typeAlias alias="riskEvent" type="com.jd.jmi.escort.pojo.RiskEvent"/>
+        <typeAlias alias="riskSnapshot" type="com.jd.jmi.escort.pojo.RiskSnapshot"/>
+
+
+        <typeAlias alias="riskEventModel" type="com.jd.jmi.escort.model.RiskEventModel"/>
+        <typeAlias alias="blackUserQuery" type="com.jd.jmi.escort.model.BlackUserQuery"/>
+    </typeAliases>
+</configuration>
+
+

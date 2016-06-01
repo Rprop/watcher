@@ -1,0 +1,236 @@
+
+#**
+ * enumtype message
+ *
+ * Macro to translate a enumtype into a message.
+ *#
+
+#* @vtlvariable name="module" type="com.jd.common.web.url.UrlBuilder" *#
+#* @vtlvariable name="page" type="com.jd.common.util.base.PaginatedArrayList" *#
+#macro (showPage $module $page)
+    #if($page)
+        #set($pagePos = 2) ##当前页的尾巴长度
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="members-table-actions">
+                <div class="selected-items">
+                    共<span>$!{page.totalItem}</span>条
+                </div>
+
+                <div class="selected-actions">
+                    <span class="edit">$!{page.pageSize}</span>条/页 共 <span class="delete">$!{page.totalPage}</span> 页
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 text-right text-center-sm">
+            <ul class="pagination-sm pagination">
+                #if($page.previousPageAvailable) ##如果能向上翻页
+                    <li><a href="$!module.put("page",1).build()">首页</a></li>
+                    <li><a href="$!module.put("page",$!{page.previousPage}).build()">上一页</a></li>
+                #else
+                    <li class="disabled"><a href="javascript:void(0);">首页</a></li>
+                    <li class="disabled"><a href="javascript:void(0);">上一页</a></li>
+                #end
+
+                #foreach($i in [$pagePos..1]) ##增加前面的尾巴
+                    #if($!page.index - $i > 1)
+                        #set($pageIndex= $!page.index - $i)
+                        <li class="paginate_button" tabindex="0"><a
+                                href="$!module.put("page",$pageIndex).build()">$pageIndex</a></li>
+                    #end
+                #end
+
+                <li class="active"><a href="javascript:void(0);">$!page.index</a></li> ##显示当前页号
+
+                #foreach($i in [1..$pagePos]) ##增加后面的尾巴
+                    #if($!page.totalPage - $!page.index - $i > 0)
+                        #set($pageIndex= $!page.index + $!i)
+                        <li><a href="$!module.put("page",$pageIndex).build()">$pageIndex</a></li>
+                    #end
+                #end
+
+                #if($!page.totalPage - $!page.index > $pagePos+1)
+                    <li><a href="javascript:void(0);">...</a></li> #end ##显示后面的省略号
+                #if($page.nextPageAvailable) ##显示后面的页
+                    <li><a href="$!module.put("page",$!{page.nextPage}).build()">下一页</a></li>
+                    <li><a href="$!module.put("page",$!{page.totalPage}).build()">末页</a></li>
+                #else
+                    <li class="disabled"><a href="javascript:void(0);">下一页</a></li>
+                    <li class="disabled"><a href="javascript:void(0);">末页</a></li>
+                #end
+            </ul>
+        </div>
+    </div>
+    #end
+#end
+
+#macro (showPageJs $fun $page)
+    #if($page)
+        #set($pagePos = 2) ##当前页的尾巴长度
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="members-table-actions">
+                <div class="selected-items">
+                    共<span>$!{page.totalItem}</span>条
+                </div>
+
+                <div class="selected-actions">
+                    <span class="edit">$!{page.pageSize}</span>条/页 共 <span class="delete">$!{page.totalPage}</span> 页
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 text-right text-center-sm">
+            <ul class="pagination-sm pagination">
+                #if($page.previousPageAvailable) ##如果能向上翻页
+                    <li><a href="javascript:$fun('1');">首页</a></li>
+                    <li><a href="javascript:$fun('$!{page.previousPage}');">上一页</a></li>
+                #else
+                    <li class="disabled"><a href="javascript:void(0);">首页</a></li>
+                    <li class="disabled"><a href="javascript:void(0);">上一页</a></li>
+                #end
+                #foreach($i in [$pagePos..1]) ##增加前面的尾巴
+                    #if($!page.index - $i > 1)
+                        #set($pageIndex= $!page.index - $i)
+                        <li class="paginate_button" tabindex="0"><a
+                                href="javascript:$fun('$pageIndex');">$pageIndex</a></li>
+                    #end
+                #end
+                <li class="active"><a href="javascript:void(0);">$!page.index</a></li> ##显示当前页号
+                #foreach($i in [1..$pagePos]) ##增加后面的尾巴
+                    #if($!page.totalPage - $!page.index - $i > 0)
+                        #set($pageIndex= $!page.index + $!i)
+                        <li><a href="javascript:$fun('$pageIndex');">$pageIndex</a></li>
+                    #end
+                #end
+                #if($!page.totalPage - $!page.index > $pagePos+1)
+                    <li><a href="javascript:void(0);">...</a></li> #end ##显示后面的省略号
+                #if($page.nextPageAvailable) ##显示后面的页
+                    <li><a href="javascript:$fun('$!{page.nextPage}');">下一页</a></li>
+                    <li><a href="javascript:$fun('$!{page.totalPage}');">末页</a></li>
+                #else
+                    <li class="disabled"><a href="javascript:void(0);">下一页</a></li>
+                    <li class="disabled"><a href="javascript:void(0);">末页</a></li>
+                #end
+            </ul>
+        </div>
+    </div>
+    #end
+#end
+
+
+#macro(getOrderTypes $type)
+    #set($formTypes = $!orderTypeUtil.getOrderTypes())
+    #foreach($formtype in ${formTypes.keySet()})
+    <option value="$formtype" #if($formtype==$!type)selected="true"#end>${formTypes.get($formtype)}</option>
+    #end
+#end
+
+##操作符
+#macro(getOperator $val)
+    #set($operators = $!jmiEnumUtils.getOperatorEnums())
+    #foreach($item in $operators)
+    <option value="$item.code"  #if($item.code == $!val)
+            selected="true" #end>$item.name</option>
+    #end
+#end
+#macro(getOftenOperator $val)
+    #set($operators = $!jmiEnumUtils.getOftenOperatorEnums())
+    #foreach($item in $operators)
+    <option value="$item.code"  #if($item.code == $!val)
+            selected="true" #end>$item.name</option>
+    #end
+#end
+##会员等级
+#macro(getMemberGradeEnum $val)
+    #set($memberGrades = $!jmiEnumUtils.getmMemberGradeEnums())
+    #foreach($item in $memberGrades)
+    <option value="$item.code"  #if($item.code == $!val)
+            selected="true" #end>$item.name</option>
+    #end
+#end
+
+##是否
+#macro(getaAskEnums $val)
+    #set($asks = $!jmiEnumUtils.getaAskEnums())
+    #foreach($item in $asks)
+    <option value="$item.code"  #if($item.code == $!val)
+            selected="true" #end>$item.name</option>
+    #end
+#end
+
+##行为时段
+#macro(getTimeIntervalEnums $val)
+    #set($times = $!jmiEnumUtils.getTimeIntervalEnums())
+    #foreach($item in $times)
+    <option value="$item.code"  #if($item.code == $!val)
+            selected="true" #end>$item.name</option>
+    #end
+#end
+
+##黑名单同步规则时段
+#macro(getSyncTimeIntervalEnums $val)
+    #set($times = $!jmiEnumUtils.getSyncTimeIntervalEnums())
+    #foreach($item in $times)
+    <option value="$item.code"  #if($item.code == $!val)
+            selected="true" #end>$item.name</option>
+    #end
+#end
+
+##订单状态
+#macro(getJmiOrderStatusEnums $val)
+    #set($status = $!jmiEnumUtils.getJmiOrderStatusEnums())
+    #foreach($item in $status)
+    <option value="$item.code"  #if($item.code == $!val)
+            selected="true" #end>$item.name</option>
+    #end
+#end
+
+##执行规则
+#macro(getJmiActionEnums $val)
+    #set($actions = $!jmiEnumUtils.getJmiActionEnums())
+    #foreach($item in $actions)
+    <option value="$item.code"  #if($item.code == $!val)
+            selected="true" #end>$item.name</option>
+    #end
+#end
+
+##起飞时间
+#macro(getTakeOffTimeEnums $val)
+    #set($takeOffTimes = $!jmiEnumUtils.getTakeOffTimeEnums())
+    #foreach($item in $takeOffTimes)
+    <option value="$item.code"  #if($item.code == $!val)
+            selected="true" #end>$item.name</option>
+    #end
+#end
+
+##试用类型
+#macro(getTryTypeEnums $val)
+    #set($tryTypeEnums = $!jmiEnumUtils.gettTryTypeEnums())
+    #foreach($item in $tryTypeEnums)
+    <option value="$item.code"  #if($item.code == $!val)
+            selected="true" #end>$item.name</option>
+    #end
+#end
+
+##风险用户等级
+#macro(getBlackUserLevels $level)
+    #set($formLevels = $!blackUserLevelUtil.getBlackUserLevels())
+    #foreach($formLevel in ${formLevels.keySet()})
+    <option value="$formLevel" #if($formLevel==$!level)selected="true"#end>${formLevels.get($formLevel)}</option>
+    #end
+#end
+
+##获取正则表达式
+#macro(formPattern)
+<option value="">常用正则</option>
+<option value="^([1-9]\d*\.?\d*)$">数字</option>
+<option value="^-?[1-9]\d*$">整数</option>
+<option value="^[a-z]+$">字母</option>
+<option value="^[0-9a-z]+$">数字+字母</option>
+<option value="^[\w\-\.]+@[\w\-\.]+(\.\w+)+$">E-mail</option>
+<option value="^[0-9]{5,20}$">QQ</option>
+<option value="^http:\/">超级链接</option>
+<option value="^(1)[0-9]{10}$">手机号码</option>
+<option value="^[0-9-]{6,13}$">电话号码</option>
+<option value="^[0-9]{6}$">邮政编码</option>
+#end

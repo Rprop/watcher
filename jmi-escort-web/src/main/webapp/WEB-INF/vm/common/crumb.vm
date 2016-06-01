@@ -1,0 +1,14 @@
+#set($module=$!pageTitle[0])
+#set($title=$!pageTitle[2])
+#set($description=$!pageTitle[3])
+<div class="page-title">
+    <div class="title-env">
+        <h1 class="title">#if($!title)$!title#{else}#springMessage("site.title")#end</h1>
+    </div>
+    <div class="breadcrumb-env">
+        <ol class="breadcrumb bc-1">
+            <li><a href="$!manJmiModule.forPath("/").build()"><i class="fa-home"></i>Home</a></li>
+            <li class="active"><strong>#if($!description)$!description#{else}#springMessage("site.description")#end</strong></li>
+        </ol>
+    </div>
+</div>

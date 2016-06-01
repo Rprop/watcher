@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jd.jmi.escort.dao.BlackUserMapper">
+    <resultMap id="BaseResultMap" type="blackUser">
+        <id column="id" property="id"/>
+        <result column="userPin" property="userPin"/>
+        <result column="orderType" property="orderType"/>
+        <result column="level" property="level"/>
+        <result column="triggerCount" property="triggerCount"/>
+        <result column="syncNum" property="syncNum"/>
+        <result column="syncTime" property="syncTime"/>
+        <result column="source" property="source"/>
+        <result column="status" property="status"/>
+        <result column="created" property="created"/>
+        <result column="modified" property="modified"/>
+        <result column="modifyUser" property="modifyUser"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, userPin, orderType, level, triggerCount, source, syncNum, syncTime,status, created, modified, modifyUser
+    </sql>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from black_user
+        where status != -1
+        and id = #{id}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from black_user
+        where id = #{id}
+    </delete>
+    <insert id="insert" parameterType="blackUser">
+        insert into black_user (userPin, orderType,
+        level, triggerCount, source,
+        created, modified, modifyUser
+        )
+        values (#{userPin}, #{orderType},
+        #{level}, #{triggerCount}, #{source},
+        now(),now(),#{modifyUser}
+        )
+    </insert>
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into black_user ( userPin, orderType,level, triggerCount, source,created, modified, modifyUser)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.userPin}, #{item.orderType}, #{item.level},#{item.triggerCount},#{item.source}, now(), now(), #{item.modifyUser})
+        </foreach>
+    </insert>
+    <update id="updateLevelBatch" parameterType="java.util.List">
+        update black_user
+        set
+        level = 2
+        where id in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item.id}
+        </foreach>
+    </update>
+    <update id="updateById" parameterType="blackUser">
+        update black_user
+        set userPin = #{userPin},
+        orderType = #{orderType},
+        level = #{level},
+        triggerCount = #{triggerCount},
+        source = #{source},
+        syncNum = #{syncNum},
+        syncTime = #{syncTime},
+        status = #{status},
+        modified = now(),
+        modifyUser = #{modifyUser}
+        where id = #{id}
+    </update>
+    <update id="updateStatusById" parameterType="blackUser">
+        update black_user
+        set status = #{status},
+        modified = now(),
+        modifyUser = #{modifyUser}
+        where id = #{id}
+    </update>
+    <update id="updateTriggerCountById" parameterType="blackUser">
+        update black_user
+        set level = #{level},
+        triggerCount = triggerCount + 1,
+        modified = now(),
+        modifyUser = #{modifyUser}
+        where id = #{id}
+    </update>
+    <select id="queryCount" resultType="int" parameterType="blackUserQuery" >
+        select count(1)
+        from black_user
+        <include refid="queryDynamic" />
+    </select>
+    <select id="queryList" resultMap="BaseResultMap" parameterType="blackUserQuery" >
+        select
+        <include refid="Base_Column_List" />
+        from black_user
+        <include refid="queryDynamic" />
+        order by modified desc
+        limit #{startRow},#{pageSize}
+    </select>
+    <sql id="queryDynamic">
+        <where >
+            status != -1
+            <if test="userPin != null and userPin!=''" >
+                and userPin=#{userPin}
+            </if>
+            <if test="orderType != null and orderType>0" >
+                and orderType=#{orderType}
+            </if>
+            <if test="level != null and level>0" >
+                and level=#{level}
+            </if>
+            <if test="startTime != null" >
+                and modified>=#{startTime}
+            </if>
+            <if test="endTime != null" >
+                <![CDATA[ and modified<=#{endTime}]]>
+            </if>
+        </where>
+    </sql>
+    <select id="selectByNameOrderType" resultMap="BaseResultMap" parameterType="blackUserQuery">
+        select
+        <include refid="Base_Column_List"/>
+        from black_user
+        where status != -1
+        and userPin = #{userPin}
+        and orderType = #{orderType}
+        limit 1
+    </select>
+    <select id="countByNameOrderType" resultType="int" parameterType="java.lang.Long">
+        select count(1)
+        from black_user
+        where userPin = #{userPin}
+        and orderType = #{orderType}
+    </select>
+</mapper>

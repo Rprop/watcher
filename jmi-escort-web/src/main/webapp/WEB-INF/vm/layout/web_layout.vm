@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    #set($misspath='http://misc.360buyimg.com/')
+    #parse("common/web/head.vm")
+    #parse("common/web/head_top.vm")
+    #parse("common/web/head_default.vm")
+    $screen_content
+    #parse("common/web/bottom_service.vm")
+    #parse("common/web/bottom.vm")
+</body>
+</html>

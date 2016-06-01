@@ -1,0 +1,74 @@
+<div id="blackUserLevelDiv"  style="display:none;">
+    <div class="jmi-user-risk-alert">
+        <ul class="user-risk-list">
+            <li>
+                <span class="name"><em>*</em>用户PIN</span>
+                <span id="userLevelDiv_userPin" class="cont"></span>
+            </li>
+            <li>
+                <span class="name">虚拟风险用户等级</span>
+                <span id="userLevelDiv_riskLevel" class="cont"></span>
+            </li>
+            <li>
+                <span class="name">会员等级</span>
+                <span id="userLevelDiv_memberLevel" class="cont">查询中…</span>
+            </li>
+            <li>
+                <span class="name">京东风险等级</span>
+                <span id="userLevelDiv_jdRiskLevel" class="cont">查询中…</span>
+            </li>
+        </ul>
+        <div class="alert-btn"></div>
+    </div>
+</div>
+<style>
+    .jmi-user-risk-alert .user-risk-list li .name{
+        width: 115px;
+    }
+</style>
+<script  type="text/javascript">
+    /**
+     * 显示风险等级
+     */
+    function showInfo(userPin,level){
+        $("#userLevelDiv_memberLevel").html("");//需清空
+        $("#userLevelDiv_jdRiskLevel").html("");//需清空
+
+        $("#userLevelDiv_userPin").html(userPin);
+        var levelDisplayValue = "";
+        if(level == 2){
+            levelDisplayValue = "黑名单用户";
+        }else{
+            levelDisplayValue = "风险用户";
+        }
+        $("#userLevelDiv_riskLevel").html(levelDisplayValue);
+
+        $.ajax({
+            url:'/man/blackUser/getUserInfo',
+            type:'post',
+            data:'userPin='+userPin,
+            async : false, //默认为true 异步
+            error:function(){
+                $("#userLevelDiv_memberLevel").html("未知");
+                $("#userLevelDiv_jdRiskLevel").html("未知");
+            },
+            success:function(data){
+                var ajaxobj = $.parseJSON(data.mes);
+                if(ajaxobj.userLevel == null || ajaxobj.userLevel == '' || ajaxobj.userLevel == 'null'){
+                    $("#userLevelDiv_memberLevel").html("未知");
+                }else{
+                    $("#userLevelDiv_memberLevel").html(ajaxobj.userLevel);
+                }
+                if(ajaxobj.risk == null || ajaxobj.risk == '' || ajaxobj.risk == 'null'){
+                    $("#userLevelDiv_jdRiskLevel").html("未知");
+                }else{
+                    $("#userLevelDiv_jdRiskLevel").html(ajaxobj.risk);
+                }
+            }
+        });
+
+        $("#modal-blackUserLevel").modal('show', {backdrop: 'static'});
+        jQuery('#modal-blackUserLevel .modal-body').html($("#blackUserLevelDiv").html());
+
+    }
+</script>

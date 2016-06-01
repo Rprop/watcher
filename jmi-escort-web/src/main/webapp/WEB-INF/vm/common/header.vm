@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="/xenon/css/fonts/face-layout.css?family=Arimo:400,700,400italic" id="style-resource-1">
+<link rel="stylesheet" href="/xenon/css/fonts/linecons.css" id="style-resource-2">
+<link rel="stylesheet" href="/xenon/css/fonts/font-awesome.min.css" id="style-resource-3">
+<link rel="stylesheet" href="$!manJmiModule.forPath("/").build()xenon/assets/css/bootstrap.css" id="style-resource-4">
+<link rel="stylesheet" href="$!manJmiModule.forPath("/").build()xenon/assets/css/xenon-core.css" id="style-resource-5">
+<link rel="stylesheet" href="$!manJmiModule.forPath("/").build()xenon/assets/css/xenon-forms.css" id="style-resource-6">
+<link rel="stylesheet" href="$!manJmiModule.forPath("/").build()xenon/assets/css/xenon-components.css" id="style-resource-7">
+<link rel="stylesheet" href="$!manJmiModule.forPath("/").build()xenon/assets/css/xenon-skins.css" id="style-resource-8">
+<link rel="stylesheet" href="$!manJmiModule.forPath("/").build()xenon/assets/css/custom.css" id="style-resource-9">
+<link rel="stylesheet" href="/xenon/css/jmi.css">
+<script src="$!manJmiModule.forPath("/").build()xenon/assets/js/jquery-1.11.1.min.js"></script>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --> <!--[if lt IE 9]>
+<script src="$!manJmiModule.forPath("/").build()xenon/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="$!manJmiModule.forPath("/").build()xenon/respond/1.4.2/respond.min.js"></script> <![endif]-->

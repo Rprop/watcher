@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.1.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
+
+    <!--使用注解注入bean-->
+    <context:annotation-config/>
+
+    <!--加载动态配置-->
+    <context:property-placeholder location="classpath:important.properties,classpath:extend.properties"/>
+
+    <!-- 扫描文件（自动将servicec层注入） -->
+    <context:component-scan base-package="com.jd.jmi.escort.service.impl,com.jd.jmi.*.dao"/>
+
+    <!-- 强制使用CGLIB代理 -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!--&lt;!&ndash; AOP配置事物 &ndash;&gt;-->
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 查询用 -->
+            <tx:method name="query*" read-only="true" propagation="REQUIRED"/>
+            <tx:method name="get*" read-only="true" propagation="REQUIRED"/>
+            <tx:method name="count*" read-only="true" propagation="REQUIRED"/>
+            <!-- 删除用 -->
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <!-- 更新用 -->
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
+            <!-- 新增用 -->
+            <tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception"/>
+            <!-- merge用 -->
+            <tx:method name="save*" propagation="REQUIRED" rollback-for="Exception"/>
+
+            <!--<tx:method name="*" propagation="REQUIRED"/>-->  <!-- all -->
+        </tx:attributes>
+    </tx:advice>
+
+    <!--&lt;!&ndash; 配置AOP切面 &ndash;&gt;-->
+    <aop:config>
+        <aop:pointcut id="transactionPointcut" expression="execution(*  com.jd.jmi.escort.service.*.*(..))"/>
+        <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice"/>
+    </aop:config>
+
+    <!-- 使用annotation注解方式配置事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <import resource="spring-config/spring-config-jsf.xml"/>
+    <import resource="spring-config/spring-config-service.xml"/>
+    <import resource="spring-config/spring-config-datasource.xml"/>
+    <import resource="spring-config/spring-config-jmq-consumer.xml"/>
+    <import resource="spring-config/spring-config-jmq-producer.xml"/>
+
+</beans>

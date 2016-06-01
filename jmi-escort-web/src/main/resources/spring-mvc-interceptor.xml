@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <!-- url related -->
+    <util:map id="_urlBuilderMap">
+        <entry key="homeModule">
+            <bean class="com.jd.common.web.url.UrlBuilder">
+                <constructor-arg value="http://${escort.jmi.domain}/"/>
+            </bean>
+        </entry>
+        <entry key="manJmiModule">
+            <bean class="com.jd.common.web.url.UrlBuilder">
+                <constructor-arg value="http://${escort.jmi.domain}/"/>
+            </bean>
+        </entry>
+        <entry key="loginUrl">
+            <bean class="com.jd.common.web.url.UrlBuilder">
+                <constructor-arg value="${_sso.server.login.address}"/>
+            </bean>
+        </entry>
+    </util:map>
+
+    <bean id="urlBuilders" class="com.jd.common.web.url.UrlBuilders">
+        <constructor-arg ref="_urlBuilderMap"/>
+    </bean>
+
+    <mvc:interceptors>
+        <!--读取自己的系统种的cookie值，读到后判断如果没过期 则更新时间-->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <!--排除不需要拦截的url-->
+            <mvc:exclude-mapping path="/logout"/>
+            <ref bean="_LoginContextInterceptor"/>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <!--解析cookie值 包装令牌值-->
+            <mvc:mapping path="/**"/>
+            <ref bean="_DotnetTicketContextInterceptor"/>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <!--调用erp接口将nick封装到LoginContext里面-->
+            <mvc:mapping path="/**"/>
+            <ref bean="_HrmDotnetTicketLoginContextInterceptor"/>
+        </mvc:interceptor>
+
+        <!--检测用户信息是否存在，不存在则去登录-->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <ref bean="_DotnetTicketRequiredInterceptor"/>
+        </mvc:interceptor>
+
+        <!--  获取用户拥有的权限码，并且和当前请求前注解的权限码进行比对，增加url则拦截，上一个拦截器必须也增加 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/logout"/>
+            <ref bean="_HrmPrivilegeInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+
+    <context:component-scan base-package="com.jd.jmi.escort.web.controller"/>
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+    </bean>
+
+    <!-- cookie related -->
+    <bean id="cookieCipherTools" class="com.jd.common.web.cookie.CookieCipherTools">
+        <property name="charsetName" value="utf-8"/>
+    </bean>
+
+    <bean id="_jdEncryptCookie" class="com.jd.common.web.cookie.JdCookie" abstract="true">
+        <property name="cookieCipherTools" ref="cookieCipherTools"/>
+        <property name="encrypt" value="true"/>
+        <property name="key" value="${_sso.client.encrypt.cookie.key}"/>
+        <property name="path" value="/"/>
+    </bean>
+
+    <bean id="cookieUtils" class="com.jd.common.web.cookie.CookieUtils">
+        <property name="jdCookie">
+            <util:list>
+                <bean parent="_jdEncryptCookie">
+                    <property name="name" value="${_sso.client.cookie.name}"/>
+                </bean>
+                <bean class="com.jd.common.web.cookie.JdCookie">
+                    <property name="name" value="${_sso.server.cookie.name}"/>
+                    <property name="domain" value="${_sso.server.cookie.domain}"/>
+                </bean>
+            </util:list>
+        </property>
+    </bean>
+
+    <!--退出登录需要清除的cookie-->
+    <util:list id="logoutCookie">
+        <value>${_sso.server.cookie.name}</value>
+        <value>${_sso.client.cookie.name}</value>
+    </util:list>
+
+    <bean id="_LoginContextInterceptor" class="com.jd.common.springmvc.interceptor.LoginContextInterceptor">
+        <property name="cookieUtils" ref="cookieUtils"/>
+        <property name="loginCookieKey" value="${_sso.client.cookie.name}"/>
+        <property name="sessionTimeout" value="${_sso.client.session.timeout}"/>
+    </bean>
+
+    <!-- interceptor related -->
+    <bean id="_DotnetTicketContextInterceptor"
+          class="com.jd.common.springmvc.interceptor.DotnetTicketContextInterceptor">
+        <property name="cookieUtils" ref="cookieUtils"/>
+        <property name="dotnetAuthCookieName" value="${_sso.server.cookie.name}"/>
+        <property name="dotnetAuthenticationKey" value="${_sso.server.encrypt.cookie.key}"/>
+    </bean>
+
+    <bean id="_HrmDotnetTicketLoginContextInterceptor"
+          class="com.jd.common.hrm.support.HrmDotnetTicketLoginContextInterceptor">
+        <property name="cookieUtils" ref="cookieUtils"/>
+        <property name="loginCookieKey" value="${_sso.client.cookie.name}"/>
+    </bean>
+
+
+    <bean id="_DotnetTicketRequiredInterceptor"
+          class="com.jd.common.springmvc.interceptor.DotnetTicketRequiredInterceptor">
+        <property name="urlBuilders" ref="urlBuilders"/>
+    </bean>
+
+    <bean id="_HrmPrivilegeInterceptor" class="com.jd.jmi.escort.web.intercept.HrmPrivilegeInterceptor">
+        <property name="hrmPrivilegeHelper" ref="hrmPrivilegeHelper"/>
+        <property name="closeHrmPrivilege" value="${_sso_close.hrm.privilege}"/>
+    </bean>
+    <!-- hrm web service related -->
+    <bean id="hrmPrivilegeHelper" class="com.jd.jmi.escort.util.HrmPrivilegeHelper">
+        <property name="jimDBUtils" ref="jimDBClient"/>
+        <property name="httpClientUtilMng" ref="httpClientUtilMng"/>
+        <property name="uimUrl" value="${escort.uim.url}"/>
+        <property name="method" value="${escort.uim.method}"/>
+        <property name="appKey" value="${escort.uim.app_key}"/>
+        <property name="token" value="${escort.uim.token}"/>
+        <property name="systemResCode" value="${escort.systemResCode}"/>
+        <property name="uimTimeout" value="${escort.uim.request.timeout}"/>
+        <property name="cacheTime" value="${escort.cache.time}"/>
+    </bean>
+</beans>

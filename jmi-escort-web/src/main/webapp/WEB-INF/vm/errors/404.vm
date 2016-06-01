@@ -1,0 +1,27 @@
+#* @vtlvariable name="assetModule" type="com.jd.common.web.url.UrlBuilder" *#
+#set($layout="/layout/empty.vm")
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Page Not Found</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content="#springMessage('site.description')"/>
+    <meta name="author" content="#springMessage('site.author')"/>
+    <meta name="copyright" content="#springMessage('site.copyright')"/>
+    <link href="$!assetModule.forPath("/xenon/assets/css/about/master.css").build()" rel="stylesheet" type="text/css" media="screen,projection" />
+</head>
+<body id="notfound">
+<h1 class="noshow">Page Not Found</h1>
+
+<div id="content">
+    <h2>Looking for something? </h2>
+
+    <p>我们重新设计我们的网站，并重新制定它的结构，所以目录已经更改。也许你想知道 <a href="http://cf.jd.com/display/games/Home">我们是谁？</a>.</p>
+</div>
+<!-- // content -->
+
+</body>
+</html>

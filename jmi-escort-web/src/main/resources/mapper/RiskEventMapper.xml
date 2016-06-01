@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jd.jmi.escort.dao.RiskEventMapper">
+
+
+    <select id="countRiskEvent" resultType="int" parameterType="riskEventModel">
+        SELECT COUNT(1)
+          FROM risk_event
+         WHERE 1=1
+        <if test="totalFeeSta != null and totalFeeEnd != null">
+            <![CDATA[  and totalFee BETWEEN #{totalFeeSta} and #{totalFeeEnd} ]]>
+        </if>
+        <if test="userPin != null and userPin != '' ">
+            <![CDATA[  and userPin = #{userPin} ]]>
+        </if>
+        <if test="erpOrderId != null">
+            and erpOrderId = #{erpOrderId}
+        </if>
+        <if test="orderType != null">
+            and orderType = #{orderType}
+        </if>
+        <if test="effectRuleId != null">
+            and effectRuleId = #{effectRuleId}
+        </if>
+        <if test="eventTimeSta != null and eventTimeEnd != null">
+            <![CDATA[  and triggerDate BETWEEN #{eventTimeSta} and #{eventTimeEnd} ]]>
+        </if>
+        <if test="isDelUser != null">
+            <![CDATA[  and isDelUser = #{isDelUser} ]]>
+        </if>
+        <if test="level != null">
+            <![CDATA[  and level >= #{level} ]]>
+        </if>
+
+
+
+    </select>
+
+
+    <select id="getRiskEventList" resultType="riskEvent" parameterType="riskEventModel">
+        SELECT
+            id,
+            erpOrderId,
+            orderType,
+            userPin,
+            effectRuleName,
+            effectRuleId,
+            effectDesId,
+            riskUserModelId,
+            decideModelId,
+            totalFee,
+            case totalFee when 0 then FORMAT(0,2) else FORMAT(totalFee/100,2) end AS totalFeeYuan,
+            userIp,
+            level,
+            source,
+            triggerDate,
+            isDelUser,
+            blackUserLevel,
+            created
+        FROM risk_event
+        WHERE 1=1
+        <if test="totalFeeSta != null and totalFeeEnd != null">
+            <![CDATA[  and totalFee BETWEEN #{totalFeeSta} and #{totalFeeEnd} ]]>
+        </if>
+        <if test="userPin != null and userPin != '' ">
+            <![CDATA[  and userPin = #{userPin} ]]>
+        </if>
+        <if test="erpOrderId != null">
+            and erpOrderId = #{erpOrderId}
+        </if>
+        <if test="orderType != null">
+            and orderType = #{orderType}
+        </if>
+        <if test="effectRuleId != null">
+            and effectRuleId = #{effectRuleId}
+        </if>
+        <if test="eventTimeSta != null and eventTimeEnd != null">
+            <![CDATA[  and triggerDate BETWEEN #{eventTimeSta} and #{eventTimeEnd} ]]>
+        </if>
+        <if test="isDelUser != null">
+            <![CDATA[  and isDelUser = #{isDelUser} ]]>
+        </if>
+        order by triggerDate desc
+        limit #{startRow},#{pageSize}
+    </select>
+
+
+    <insert id="insert" parameterType="riskEvent" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO risk_event(
+            uuid,
+            erpOrderId,
+            orderType,
+            userPin,
+            effectRuleName,
+            effectRuleId,
+            effectDesId,
+            riskUserModelId,
+            decideModelId,
+            totalFee,
+            userIp,
+            level,
+            triggerDate,
+            source,
+            isDelUser,
+            blackUserLevel,
+            created
+        )
+        VALUE (
+            #{uuid},
+            #{erpOrderId},
+            #{orderType},
+            #{userPin},
+            #{effectRuleName},
+            #{effectRuleId},
+            #{effectDesId},
+            #{riskUserModelId},
+            #{decideModelId},
+            #{totalFee},
+            #{userIp},
+            #{level},
+            #{triggerDate},
+            #{source},
+            #{isDelUser},
+            #{blackUserLevel},
+            now()
+        )
+    </insert>
+
+    <select id="countRiskEventTotal" resultType="String" parameterType="riskEventModel">
+        SELECT IFNULL(FORMAT(SUM(totalFee)/100,2) ,'0.00')
+        FROM risk_event
+        WHERE 1=1
+        <if test="totalFeeSta != null and totalFeeEnd != null">
+            <![CDATA[  and totalFee BETWEEN #{totalFeeSta} and #{totalFeeEnd} ]]>
+        </if>
+        <if test="userPin != null and userPin != '' ">
+            <![CDATA[  and userPin = #{userPin} ]]>
+        </if>
+        <if test="erpOrderId != null">
+            and erpOrderId = #{erpOrderId}
+        </if>
+        <if test="orderType != null">
+            and orderType = #{orderType}
+        </if>
+        <if test="effectRuleId != null">
+            and effectRuleId = #{effectRuleId}
+        </if>
+        <if test="eventTimeSta != null and eventTimeEnd != null">
+            <![CDATA[  and triggerDate BETWEEN #{eventTimeSta} and #{eventTimeEnd} ]]>
+        </if>
+        <if test="isDelUser != null">
+            <![CDATA[  and isDelUser = #{isDelUser} ]]>
+        </if>
+
+    </select>
+
+    <update id="updateForDelUser" parameterType="Map">
+        UPDATE risk_event
+           SET isDelUser = #{isDelUser}
+         WHERE <![CDATA[  userPin = #{userPin} and orderType = #{orderType} ]]>
+    </update>
+
+    <update id="updateForBlackUserLevel" parameterType="Map">
+        UPDATE risk_event
+           SET blackUserLevel = #{blackUserLevel}
+         WHERE id = #{id}
+    </update>
+
+
+</mapper>

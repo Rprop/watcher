@@ -1,0 +1,23 @@
+<!-- 用户等级-->
+<div id="userLevelTem">
+    <div class="form-inline" id="{id}_data">
+        <input name="conditionName" type="hidden" value="{cName}"/>
+        <div class="form-group">
+            <label class="control-label">{name}</label>
+        </div>
+        <div class="form-group" style="width: 160px;">
+            <div>
+                <select name="operator" id="{id}_operator" class="form-control">
+                    #getOftenOperator(-1)
+                </select>
+            </div>
+        </div>
+        <div class="form-group" style="width: 160px;">
+            <div>
+                <select name="expectValue" id="{id}_expectValue" class="form-control">
+                    #getMemberGradeEnum(50)
+                </select>
+            </div>
+        </div>
+    </div>
+</div>

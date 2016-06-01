@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd"
+	xmlns:context="http://www.springframework.org/schema/context">
+	
+	<!-- 添加了注解监控的业务对象 -->
+	<bean class="com.jd.ump.annotation.JAnnotationTarget" id="ja"/>
+	
+	<context:annotation-config/>  
+          
+	<!-- aop动态代理 -->  
+	<aop:aspectj-autoproxy proxy-target-class="true"/>  
+	<!-- 注解处理器  -->  
+	<bean class="com.jd.ump.annotation.JAnnotation">
+		<!-- 初始化系统的心跳 key-->
+		<property name="systemKey" value="ump.alive"></property>
+		<property name="jvmKey" value="ump.test.jvm"></property>
+		<property name="appName" value="bjhanm"></property>
+	</bean>
+
+</beans>

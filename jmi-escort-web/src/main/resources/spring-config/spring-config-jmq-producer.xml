@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jmq="http://code.jd.com/schema/jmq"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://code.jd.com/schema/jmq
+        http://code.jd.com/schema/jmq/jmq-1.0.xsd"
+       default-autowire="byName">
+
+    <jmq:transport id="rcsTransport" address="${rcs.jmq.address}" user="${rcs.jmq.user}"
+                   password="${rcs.jmq.password}" app="${rcs.jmq.app}"
+                   epoll="false" sendTimeout="20000" connectionTimeout="20000" soTimeout="20000"/>
+    <jmq:producer id="rcsProducer" retryTimes="3" transport="rcsTransport"/>
+
+</beans>

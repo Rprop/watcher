@@ -1,0 +1,18 @@
+<div id="personInfoTem">
+    <div class="form-inline" id="{id}_data">
+        <input name="conditionName" type="hidden" value="{cName}"/>
+        <div class="form-group">
+            <label class="control-label">{name}</label>
+        </div>
+        <div class="form-group" style="width: 160px;">
+            <div>
+                <input name="operator" type="hidden" id="{id}_operator" value="=="/>
+                <select name="expectValue" id="{id}_expectValue" class="form-control" style="display: none;">
+                    <option value="1">与实名一致</option>
+                    <option value="0">与实名不一致</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group"></div>
+    </div>
+</div>

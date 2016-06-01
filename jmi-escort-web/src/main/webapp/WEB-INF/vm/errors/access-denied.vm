@@ -1,0 +1,7 @@
+#set($pageTitle=['','','权限拦截','权限拦截'])
+#if($exception)
+    您没有访问此页面的权限
+    #foreach($code in $!exception.codes)
+        <li>${code}</li>
+    #end
+#end

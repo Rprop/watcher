@@ -1,0 +1,39 @@
+#set($super= $pageTitle[0])
+#set($sub= $pageTitle[1])
+<li #if($!super=="riskRuleModel") class="opened active"#end xmlns="http://www.w3.org/1999/html">
+    <a href="/man/riskUserModel/list"><i class="linecons-key"></i><span class="title">风险规则管理</span></a>
+    <ul>
+        <li#if($!sub=="list") class="active"#end><a href="/man/riskUserModel/list"><span
+                class="title">风险用户模型管理</span></a></li>
+        <li#if($!sub=="riskDecideModel/list") class="active"#end><a href="/man/riskDecideModel/list"><span
+                class="title">风险判定模型管理</span></a></li>
+        <li#if($!sub=="riskEffectRule/list") class="active"#end><a href="/man/riskEffectRule/list"><span class="title">风险生效规则管理</span></a>
+        </li>
+    </ul>
+</li>
+
+<li #if($!super=="riskEventModel") class="opened active"#end>
+
+    <a href="/man/riskEvent/index"><i class="linecons-inbox"></i><span class="title">风险事件管理</span></a>
+    <ul>
+        <li#if($!sub=="riskEvent/index") class="active"#end><a href="/man/riskEvent/index"><span
+                class="title">风险事件管理</span></a></li>
+    </ul>
+
+</li>
+
+<li #if($!super=="riskUserModel") class="opened active"#end>
+
+
+    <a href="/man/blackUser/list"><i class="linecons-user"></i><span class="title">风险用户管理</span></a>
+    <ul>
+        <li#if($!sub=="blackSyncRule/list") class="active"#end><a href="/man/blackSyncRule/list"><span class="title">黑名单同步规则管理</span></a>
+        </li>
+        <li#if($!sub=="blackUser/list") class="active"#end><a
+                href="$!manJmiModule.forPath("/").build()/man/blackUser/list"><span class="title">风险用户管理</span></a></li>
+        <li#if($!sub=="whiteUser/list") class="active"#end><a href="/man/whiteUser/list"><span
+                class="title">风险白名单管理</span></a></li>
+    </ul>
+
+</li>
+

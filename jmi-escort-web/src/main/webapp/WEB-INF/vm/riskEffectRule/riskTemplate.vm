@@ -1,0 +1,28 @@
+<script type="text/javascript">
+    var userModelsJSONARR = [{id:"riskLevel",name:"用户风险等级",cName:"riskLevel"},
+        {id:"userLevel",name:"用户会员等级",cName:"memberGrade"},
+        {id:"newUser",name:"虚拟新用户",cName:"newUser"},
+        {id:"realName",name:"京东实名用户",cName:"realName"}];
+
+    var baseDecideModes = [{id:"behavior",name:"行为时段",cName:"behavior"},
+        {id:"serviceType",name:"业务类型",cName:"serviceType"},
+        {id:"orderStatus",name:"订单状态",cName:"orderStatus"}];
+
+    var allServiceDecideModes = {orderAmount:{name:"订单金额",cName:"orderAmount",expectValue:1000,tem:"operator",maxlength:9,min:1,max:999999999},
+        historyOrderAmount:{name:" 购买总单数",cName:"historyOrderAmount",expectValue:1000,tem:"operator",maxlength:9,min:1,max:999999999},
+        historyOrderTotal:{name:" 购买总金额",cName:"historyOrderTotal",expectValue:1000,tem:"operator",maxlength:9,min:1,max:999999999},
+        personInfo:{name:" 乘机人信息",cName:"passengerRealName"},
+        takeOffTime:{name:" 起飞时间",cName:"takeOffTime"},
+        skuid:{name:" SKUID",cName:"skuId"},
+        brandId:{name:"品牌ID",cName:"brandId"}
+    };
+    var oftenDecideModes = ["historyOrderAmount","historyOrderTotal","orderAmount"];
+    var serviceDecideModes = {
+        34:["brandId","skuid"],     //点卡
+        62:["brandId","skuid"],     //页游
+        35:["personInfo","takeOffTime"],     //国内机票
+        83:["personInfo","takeOffTime"],     //国际机票
+        37:["skuid"]      //手机充值
+    };
+</script>
+#parse("common/operator.vm")

@@ -1,0 +1,112 @@
+<div id="addBlackUserDiv" style="display:none;">
+    <div class="jmi-comm-alert jmi-comm-alert-user"
+         style="top: auto;margin-top: 0;position:relative;background:none;border: 0px;height: auto">
+        <form method="post" id="addUserForm" onsubmit="return false">
+        <div class="form-inline">
+            <div class="form-group">
+                <label class="control-label"><em>*</em>业务类型</label>
+            </div>
+            <div class="form-group" style="width: 380px;">
+                <div style="">
+                    <label style="width: 110px;">
+                        <input type="checkbox"  id="selectAll"/><span>全选</span>
+                    </label>
+                    #set($formTypes = $!orderTypeUtil.getOrderTypes())
+                    #foreach($formtype in $!formTypes.keySet())
+                        <label style="width: 110px;">
+                            <input type="checkbox" name="orderType" value="$formtype" onclick="checkbox()"/><span>${formTypes.get($formtype)}</span>
+                        </label>
+
+                    #end
+                </div>
+            </div>
+        </div>
+        <div class="form-inline">
+            <div class="form-group">
+                <label class="control-label"><em>*</em>用户PIN</label>
+            </div>
+            <div class="form-group" style="width: 160px;">
+                <input class="inp" type="text" name="userPin" id="userPin" required="true" maxlength="50"/>
+            </div>
+        </div>
+        <div class="alert-btn">
+            <a href="javascript:save()">
+                <i></i>
+                <span id="saveButton">提交</span>
+            </a>
+        </div>
+        </form>
+    </div>
+</div>
+<script  type="text/javascript">
+    /**
+     * 弹出添加黑名单用户页面
+     */
+    var addUserHtml = "";
+    function showAddBlackUserDiv(){
+        $("#modal-addBlackUser").modal('show', {backdrop: 'static'});
+        if(addUserHtml == ""){
+            addUserHtml = $("#addBlackUserDiv").html();
+            $("#addBlackUserDiv").remove();
+        }
+        jQuery('#modal-addBlackUser .modal-body').html(addUserHtml);
+        $("#selectAll").click(function(){
+            if($(this).is(':checked')){
+                $("input[name='orderType']").prop("checked",true);
+            }else{
+                $("input[name='orderType']").prop("checked",false);
+            }
+        });
+    }
+
+    function checkbox(){
+        var total = 0;
+        var count = 0;
+        $("input[name='orderType']").each(function(){
+            if($(this).val() != null && $(this).val() != ''){
+                total ++;
+            }
+        });
+        $("input[name='orderType']").each(function(){
+            if($(this).val() != null && $(this).val() != ''){
+              if($(this).is(':checked')){
+                count ++;
+              }
+            }
+        });
+        if(total == count){
+            $("#selectAll").prop("checked",true);
+        }else{
+            $("#selectAll").prop("checked",false);
+        }
+    }
+
+    function save(){
+        $("#saveButton").attr("disable",true).val("保存中…");
+        var userPin = $("#userPin").val();
+
+        if (userPin == "") {
+            alert("请输入用户PIN!");
+            return;
+        }
+        if(!checkIsNormal(userPin)){
+            alert("请输入正确的用户PIN!");
+            return;
+        }
+        if($("input[name='orderType']:checked").length==0){
+            alert("请选择业务类型!");
+            return;
+        }
+
+        $.post("/man/blackUser/saveBlackUser",
+                $("#addUserForm").serialize(),
+                function (data) {
+                    if (data.success) {
+                        window.location.href = "/man/blackUser/list";
+                    } else {
+                        alert(data.mes);
+                    }
+                }
+        );
+    }
+</script>

@@ -1,0 +1,35 @@
+<table style="display: none">
+    <tr id="areaTem">
+        <td width="130">
+            <label>
+                <input type="checkbox" value="{value}" id="area_checkbox_{id}" onclick="areaCheckClick(this,'{id}')"/>
+                <span>{name}</span>
+            </label>
+        </td>
+    </tr>
+    <tr>
+        <td id="provinceTem">
+            <label>
+                <input type="checkbox" value="{value}" onclick="proviceCheckClick('{id}')"/>
+                <span>{name}</span>
+            </label>
+        </td>
+    </tr>
+</table>
+<div id="region_div" style="display:none;">
+    <div class="jmi-alert" style="margin-top: -20px;">
+        <div class="jmi-alert-con">
+            <table class="list" id="region_list"></table>
+        </div>
+        <div class="jmi-alert-btn">
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-2">
+                    <input type="button" onclick="saveRegion();" value="提交" class="btn btn-block btn-secondary btn-icon">
+                </div>
+                <div class="col-sm-2">
+                    <input type="button" onclick="$('#modal-region').modal('hide');" value="取消" class="btn btn-block btn-secondary btn-icon">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

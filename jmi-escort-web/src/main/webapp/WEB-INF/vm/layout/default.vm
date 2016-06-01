@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="欢迎来到京米平台"/>
+    <meta name="author" content="北秋"/>
+    <title>京米平台</title>
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="icon" href="/favicon.png" type="image/png"/>
+    #parse("common/header.vm")
+</head>
+<body class="page-body">
+    #parse("common/top.vm") ##设置面板
+    <div class="page-container">
+        #parse("common/left.vm")
+        <!--Main Content -->
+        <div class="main-content">
+            <!--Page Title-->
+            #parse("common/crumb.vm")
+            <!--Page end-->
+            $screen_content
+            <!--Main Footer-->
+            #parse("common/footer.vm")
+            <!--Main Footer end-->
+        </div>
+        <!--Main Content end-->
+    </div>
+    #parse("/common/modal.vm")
+    #parse("/common/assets.vm")
+</body>
+</html>
