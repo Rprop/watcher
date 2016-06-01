@@ -8,14 +8,14 @@
 	xmlns:context="http://www.springframework.org/schema/context">
 	
 	<!-- 添加了注解监控的业务对象 -->
-	<bean class="com.jd.ump.annotation.JAnnotationTarget" id="ja"/>
+	<bean class="com.whh.ump.annotation.JAnnotationTarget" id="ja"/>
 	
 	<context:annotation-config/>  
           
 	<!-- aop动态代理 -->  
 	<aop:aspectj-autoproxy proxy-target-class="true"/>  
 	<!-- 注解处理器  -->  
-	<bean class="com.jd.ump.annotation.JAnnotation">
+	<bean class="com.whh.ump.annotation.JAnnotation">
 		<!-- 初始化系统的心跳 key-->
 		<property name="systemKey" value="ump.alive"></property>
 		<property name="jvmKey" value="ump.test.jvm"></property>

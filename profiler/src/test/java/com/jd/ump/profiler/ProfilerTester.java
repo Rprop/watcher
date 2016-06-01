@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.jd.ump.profiler.proxy.Profiler;
+import com.whh.ump.profiler.proxy.Profiler;
+import com.whh.ump.profiler.CallerInfo;
 
 public class ProfilerTester {
     private static Random rd = new Random(System.currentTimeMillis());

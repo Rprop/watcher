@@ -14,7 +14,7 @@
 
     <context:component-scan base-package="com.jd"/>
 
-    <bean id="messageCodec" class="com.jd.watcher.spi.impl.DefaultMessageCodec"/>
+    <bean id="messageCodec" class="com.whh.watcher.spi.impl.DefaultMessageCodec"/>
 
     <!--&lt;!&ndash;加载动态配置&ndash;&gt;-->
     <!--<context:property-placeholder location="classpath:important.properties,classpath:extend.properties"/>-->

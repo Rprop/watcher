@@ -1,8 +1,9 @@
 package com.jd.ump.profiler;
 
 import com.jd.ump.log4j.Logger;
-import com.jd.ump.profiler.proxy.Profiler;
-import com.jd.ump.profiler.util.CustomLogFactory;
+import com.whh.ump.profiler.proxy.Profiler;
+import com.whh.ump.profiler.util.CustomLogFactory;
+import com.whh.ump.profiler.CallerInfo;
 
 public class DeadLockTest {
 
